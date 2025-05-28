@@ -1,90 +1,93 @@
-const mongoose = require('mongoose');
-const Activity = mongoose.model('Activity');
+const express = require('express');
+const cors = require('cors');
+// const mongoose = require('mongoose');
+// const Activity = mongoose.model('Activity');
+
+// const Goal = require('../models/Goal');
+const Activity = require('../models/Activity');
+
+const router = express.Router();
+router.use(cors()); // Enable CORS for all routes in this router
+
+// GET all activities (newest first)
+router.get('/activities', async (req, res) => {
+  try {
+    const activities = await Activity.find().sort({ createdAt: -1 });
+    res.json(activities);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// GET single activity by ID
+router.get('/activities/:id', async (req, res) => {
+  try {
+    const activity = await Activity.findById(req.params.id);
+    if (!activity) {
+      return res.status(404).json({ message: 'Activity not found' });
+    }
+    res.json(activity);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// POST a new activity
+router.post('/activities', async (req, res) => {
+  const { title, description, activityType, date, duration } = req.body;
+
+  const newActivity = new Activity({ title, description, activityType, date, duration });
+
+  try {
+    await newActivity.save();
+    res.status(201).json(newActivity);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// PUT (update) an existing activity
+router.put('/activities/:id', async (req, res) => {
+  const { title, description, activityType, duration, date } = req.body;
+
+  if (!title || !description || !activityType || !duration || !date) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  try {
+    const activity = await Activity.findById(req.params.id);
+    if (!activity) {
+      return res.status(404).json({ error: 'Activity not found' });
+    }
+
+    activity.title = title;
+    activity.description = description;
+    activity.activityType = activityType;
+    activity.duration = duration;
+    activity.date = date;
+
+    await activity.save();
+    res.status(200).json(activity);
+  } catch (error) {
+    console.error('Error updating activity:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// DELETE an activity
+router.delete('/activities/:id', async (req, res) => {
+  try {
+    const activity = await Activity.findByIdAndDelete(req.params.id);
+    if (!activity) {
+      return res.status(404).json({ message: 'Activity not found' });
+    }
+    res.status(200).json({ message: 'Activity deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 module.exports = (app) => {
-    app.get('/activities', async (req, res) => {
-        try {
-            // this will return newest activities first
-            const activities = await Activity.find().sort({ createdAt: -1 });
-            res.json(activities);
-
-        } catch (err) {
-            res.status(400).json({ message: err.message });
-        }
-    });
-
-    app.get("/activities/:id", async (req, res) => {
-        try {
-            const activity = await Activity.findById(req.params.id);
-            if (!activity) {
-                return res.status(404).json({ message: 'Activity not found' });
-            }
-            res.json(activity);
-        } catch (err) {
-            res.status(400).json({ message: err.message });
-        }
-    })
-
-    // POST new activity
-    app.post('/activities', async (req, res) => {
-
-        const { title, description, activityType, date, duration } = req.body;
-
-        const newActivity = new Activity({ title, description, activityType, date, duration });
-
-        try {
-            await newActivity.save();
-            res.status(201).json(newActivity);
-        } catch (err) {
-            res.status(400).json({ message: err.message });
-        }
-    });
-
-    app.put('/activities/:id', async (req, res) => {
-        const { id } = req.params;
-        const { title, description, activityType, duration, date } = req.body; 
-
-        if (!title || !description || !activityType || !duration || !date) {
-            return res.status(400).json({ error: 'All fields are required' });
-        }
-
-        try {
-            
-            const activity = await Activity.findById(id);
-
-            if (!activity) {
-                return res.status(404).json({ error: 'Activity not found' });
-            }
-
-            activity.title = title;
-            activity.description = description;
-            activity.activityType = activityType;
-            activity.duration = duration;
-            activity.date = date;
-
-            await activity.save();
-
-            res.status(200).json(activity);
-        } catch (error) {
-            console.error('Error updating activity:', error);
-            res.status(500).json({ error: 'Server error' });
-        }
-    });
-
-    // DELETE activity
-    app.delete('/activities/:id', async (req, res) => {
-        const { id } = req.params;
-
-        try {
-            const activity = await Activity.findByIdAndDelete(id);
-            if (!activity) {
-                return res.status(404).json({ message: 'Activity not found' });
-            }
-            res.status(200).json({ message: 'Activity deleted successfully' });
-        } catch (err) {
-            console.error(err);
-            res.status(500).json({ message: 'Server error' });
-        }
-    });
-
+  app.use('/', router);
 };
