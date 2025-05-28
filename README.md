@@ -15,7 +15,7 @@ This template sets up a minimal React application with TypeScript, integrated wi
 Follow these steps to get the project up and running locally.
 
 ### 1. Install Dependencies
-First, install all necessary dependencies by running the following command in your terminal:
+After cloning repository, install all necessary dependencies by running the following command in your terminal:
 
 ```bash
 npm run install:all
