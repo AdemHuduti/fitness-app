@@ -1,15 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-// const mongoose = require('mongoose');
-// const Activity = mongoose.model('Activity');
 
-// const Goal = require('../models/Goal');
 const Activity = require('../models/Activity');
 
 const router = express.Router();
-router.use(cors()); // Enable CORS for all routes in this router
+router.use(cors());
 
-// GET all activities (newest first)
 router.get('/activities', async (req, res) => {
   try {
     const activities = await Activity.find().sort({ createdAt: -1 });
@@ -19,7 +15,6 @@ router.get('/activities', async (req, res) => {
   }
 });
 
-// GET single activity by ID
 router.get('/activities/:id', async (req, res) => {
   try {
     const activity = await Activity.findById(req.params.id);
@@ -32,7 +27,6 @@ router.get('/activities/:id', async (req, res) => {
   }
 });
 
-// POST a new activity
 router.post('/activities', async (req, res) => {
   const { title, description, activityType, date, duration } = req.body;
 
@@ -46,7 +40,6 @@ router.post('/activities', async (req, res) => {
   }
 });
 
-// PUT (update) an existing activity
 router.put('/activities/:id', async (req, res) => {
   const { title, description, activityType, duration, date } = req.body;
 
@@ -74,7 +67,6 @@ router.put('/activities/:id', async (req, res) => {
   }
 });
 
-// DELETE an activity
 router.delete('/activities/:id', async (req, res) => {
   try {
     const activity = await Activity.findByIdAndDelete(req.params.id);
