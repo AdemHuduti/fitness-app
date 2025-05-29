@@ -1,8 +1,9 @@
-import {  useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import api from '../axiosInstance';
 
 export function useActivities() {
     const [activities, setActivities] = useState<any[]>([]);
+    const [filteredActivities, setFilteredActivities] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
     const [successMessage, setSuccessMessage] = useState('');
@@ -34,6 +35,7 @@ export function useActivities() {
         try {
             await api.delete(`/activities/${id}`);
             setActivities(prev => prev.filter(a => a._id !== id));
+            setFilteredActivities(prev => prev.filter(a => a._id !== id));
         } catch (err: any) {
             setError(err);
         }
@@ -41,15 +43,17 @@ export function useActivities() {
 
 
 
-    // useEffect(() => {
-    //     fetchActivities();
-    // }, [fetchActivities]);
+    useEffect(() => {
+        fetchActivities();
+    }, [fetchActivities]);
 
     return {
         activities,
         loading,
         error,
         successMessage,
+        filteredActivities,
+        setFilteredActivities,
         fetchActivities,
         addActivity,
         deleteActivity,

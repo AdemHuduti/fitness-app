@@ -105,7 +105,7 @@ const ActivityForm = () => {
                 <button type="submit" className="submit-btn">
                     Save Activity
                 </button>
-                <button onClick={goBack} className="back-button">Back</button>
+                <button type="button" onClick={goBack} className="back-button">Back</button>
             </form>
         </div>
     );

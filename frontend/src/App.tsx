@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import ActivityCard from "./components/ActivityCard";
 import Filters from "./components/Filters";
@@ -10,9 +10,8 @@ import { useActivities } from "./hooks/useActivities";
 
 const App = () => {
 
-  const { fetchActivities, activities, deleteActivity } = useActivities();
+  const { fetchActivities, activities, filteredActivities, setFilteredActivities, deleteActivity } = useActivities();
 
-  const [filteredActivities, setFilteredActivities] = useState<any[]>([]);
   const [filtersApplied, setFiltersApplied] = useState<boolean>(false);
   const [goalUpdated, setGoalUpdated] = useState(false);
   const [filterMessage, setFilterMessage] = useState("");
@@ -20,9 +19,6 @@ const App = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchActivities();
-  }, []);
 
   const handleGoalUpdate = () => {
     setGoalUpdated(prev => !prev);
@@ -31,7 +27,7 @@ const App = () => {
 
 
   const handleDeleteActivity = (id: string) => {
-    deleteActivity(id);
+    deleteActivity(id)
   };
 
   const handleFilterChange = ({ activityType, date }: any) => {
