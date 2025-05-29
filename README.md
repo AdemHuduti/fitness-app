@@ -22,7 +22,7 @@ cd fitness-app
 
 After that, install all necessary dependencies by running the following command in your terminal:
 ```bash
-npm run install:all
+npm run install:all - to install all dependencies for backend and frontned
 ```
 
 This will install all dependencies for backend and frontend part <br />
@@ -31,11 +31,15 @@ First, inside project directory run command npm install - this will install back
 After installation, go inside frontned directory by running command cd frontend, and then npm install for installing all necesary dependencies
 
 ### 2. Run the Development Server
-After installation, you can start the development server.
+After installation, you can start the development server. <br />
+
 
 ```bash
-npm run dev
+npm run dev - to run both servers
 ```
+Same goes here. If some unexpected issues pops up, you must manually run both servers. <br />
+For backend side, you need to use command: npm run start <br />
+For frontend side, navigate inside frontend directory by running command cd frontned, and then npm run dev.
 
 Navigate to http://localhost:3000 in your browser to view the app.
 ### Frontend will be running on port 3000
